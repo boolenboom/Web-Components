@@ -63,7 +63,7 @@
   height: 80vh;
 }
 
-.big-img div {
+.big-img .img-set {
   position: relative;
   left: 0;
   right: 0;
@@ -73,7 +73,7 @@
   overflow-x: hidden;
 }
 
-.big-img div img {
+.big-img .img-set img {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -85,13 +85,10 @@
 .big-img .folder {
   position: absolute;
   width: 10%;
+  padding: calc((39% - 64px)/2) 0;
   top: 0;
-  bottom: 0;
-  margin: auto 0;
   font-size: 64px;
   text-align: center;
-  padding: auto;
-  z-index: 3;
 }
 
 table {
@@ -123,31 +120,5 @@ table .space {
 
 .highlevel {
   z-index: 4;
-}
-
-.slide-leave-active,
-.slide-enter-active {
-  -webkit-transition: right 2s cubic-bezier(0.9, 0, 0.1, 1);
-  transition: right 2s cubic-bezier(0.9, 0, 0.1, 1);
-}
-
-.slide-leave-from,
-.slide-enter-to,
-.lazy_slide-leave-from,
-.lazy_slide-enter-to {
-  right: -100%;
-}
-
-.slide-leave-to,
-.slide-enter-from,
-.lazy_slide-leave-to,
-.lazy_slide-enter-from {
-  right: 0%;
-}
-
-.lazy_slide-leave-active,
-.lazy_slide-enter-active {
-  -webkit-transition: right 0.5s cubic-bezier(0.9, 0, 0.1, 1) 1s;
-  transition: right 0.5s cubic-bezier(0.9, 0, 0.1, 1) 1s;
 }
 /*# sourceMappingURL=content-grid-style.css.map */

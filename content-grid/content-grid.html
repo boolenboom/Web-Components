@@ -12,12 +12,12 @@
 <body>
     <div id="image-grid" class='wrap'>
         <div class="big-img">
-            <div class='folder' @click.prevent='hiddendetail'>></div>
-            <div>
+            <div class='img-set'>
                 <template v-for='(item,index) of contents_data' v-if='item.path !== null'>
-                    <img :src="item.path" v-show='index === state_number' alt="">
+                    <img :src="item.path" v-show='index === state_number' alt="" draggable="false">
                 </template>
             </div>
+            <div class='folder' @click.prevent='hiddendetail'>></div>
             <section class="mask-left" :class='{cover:!detail_show}' @transitionend.stop='switchlevel'></section>
         </div>
         <table :class='{highlevel:grid_level === 4 ? true : false}'>
@@ -25,7 +25,7 @@
                 <tr v-for='(h,num) of dataassign'>
                     <td v-for='(data,index) of h' :colspan='data.size.w' :rowspan='data.size.h'>
                         <div :class='{content:data.path !== null}' @click.prevent='showdetail(index,num)'>
-                            <img v-if='data.path !== null' :src='data.path' alt=''>
+                            <img v-if='data.path !== null' :src='data.path' alt='' draggable="false">
                         </div>
                         <section class="mask-right" :class='{cover:!grid_show}' @transitionend.stop='switchlevel'></section>
                     </td>
