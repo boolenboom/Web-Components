@@ -1,0 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+.step .node {
+  width: 48rem;
+  margin: 100px auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  position: relative;
+}
+
+.step .node li:not([class='bar']) {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #333;
+  position: relative;
+  line-height: 2rem;
+  text-align: center;
+  z-index: 2;
+  border: .1rem solid #111;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.step .node .doing {
+  background-color: #018171;
+  -webkit-transform: scale(1.3);
+          transform: scale(1.3);
+}
+
+.step .node li.doing ~ li {
+  background-color: #ccc;
+}
+
+.step .node .bar {
+  border-radius: 0;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 9.5rem;
+  height: .6rem;
+  -webkit-transform: scaleX(1.1);
+          transform: scaleX(1.1);
+  z-index: 1;
+  background-color: #000;
+}
+/*# sourceMappingURL=progress-bar-style.css.map */

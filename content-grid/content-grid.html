@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/content-grid-style.css">
+</head>
+
+<body>
+    <div id="image-grid" class='wrap'>
+        <div class="big-img">
+            <div class='folder' @click.prevent='hiddendetail'>></div>
+            <div>
+                <template v-for='(item,index) of contents_data' v-if='item.path !== null'>
+                    <img :src="item.path" v-show='index === state_number' alt="">
+                </template>
+            </div>
+            <section class="mask-left" :class='{cover:!detail_show}' @transitionend.stop='switchlevel'></section>
+        </div>
+        <table :class='{highlevel:grid_level}'>
+            <tbody>
+                <tr v-for='(h,num) of dataassign'>
+                    <td v-for='(data,index) of h' :colspan='data.size.w' :rowspan='data.size.h'>
+                        <div :class='{content:data.path !== null}' @click.prevent='showdetail(index,num)'>
+                            <img v-if='data.path !== null' :src='data.path' alt=''>
+                        </div>
+                        <section class="mask-right" :class='{cover:!grid_show}' @transitionend.stop='switchlevel'></section>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script>
+        ;
+        (function() {
+            let gridsize = {
+                    w: 8,
+                    h: 4
+                },
+                dataURL = 'data/contents.json',
+                xhr = new XMLHttpRequest(),
+                jsonarray = [],
+                content_setting =
+                function addset(_position, _size, _path) {
+                    let obj = {
+                        position: {
+                            x: _position[0],
+                            y: _position[1]
+                        },
+                        size: {
+                            w: _size[0],
+                            h: _size[1]
+                        },
+                        path: _path
+                    };
+                    return obj;
+                };
+
+            xhr.open('GET', dataURL, true);
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    jsonarray = JSON.parse(this.responseText).array;
+                    console.log(jsonarray);
+                    let grid = new Vue({
+                        el: '#image-grid',
+                        data: {
+                            contents_data: jsonarray,
+                            dataassign: tableAssign(jsonarray, gridspace(gridsize.w, ...jsonarray)),
+                            gridTransition: 'slide',
+                            state_number: 0,
+                            grid_show: true,
+                            detail_show: false,
+                            grid_level: 4,
+                            is_once: true
+                        },
+                        methods: {
+                            showdetail: function(lin, col) {
+                                this.state_number = findIndex(lin, col, this.contents_data, this.dataassign);
+                                this.grid_show = false;
+                                this.is_once = true;
+                            },
+                            switchlevel: function(e) {
+                                if (!this.is_once) return;
+                                this.is_once = false;
+                                this.grid_level = this.grid_level === 4 ? 1 : 4;
+                                console.log('toggle');
+                            },
+                            hiddendetail: function() {
+                                this.detail_show = true;
+                                this.is_once = true;
+                            }
+                        },
+                        watch: {
+                            level: function(newVal) {
+                                this.grid_show = newVal === 4 ? true : false;
+                                this.detail_show = newVal === 1 ? true : false;
+                            }
+                        }
+                    });
+                }
+            }
+
+            function tableAssign(contents, limit) {
+                let pass = [].slice.call(limit),
+                    pack = [].slice.call(contents),
+                    dataArray = [];
+                console.log(pass, pack);
+                for (let i = 0; i < gridsize.h; i++) {
+                    let line = [],
+                        start = 1,
+                        w = 0,
+                        s = {};
+                    for (let k = 0; k < gridsize.w; k++) {
+                        if ((i * 8) + (k + 1) != pass[0]) {
+                            w++;
+                        } else if (w > 0) {
+                            s = content_setting([i + 1, start], [w, 1], null)
+                            line.push(s);
+                            w = 0;
+                            pass.shift();
+                            if (pack.length > 0 && i + 1 === pack[0].position.x * 1 &&
+                                k + 1 === pack[0].position.y * 1) {
+                                line.push(pack[0]);
+                                pack.shift();
+                            }
+                        } else {
+                            start = pass[0] + 1;
+                            pass.shift();
+                            if (pack.length > 0 && i + 1 === pack[0].position.x * 1 &&
+                                k + 1 === pack[0].position.y * 1) {
+                                line.push(pack[0]);
+                                pack.shift();
+                            }
+                        }
+                        if (k === (gridsize.w - 1) && w > 0) {
+                            s = content_setting([i + 1, start], [w, 1], null)
+                            line.push(s);
+                            w = 0;
+                            start = 1;
+                            s = {};
+                        }
+                    }
+                    dataArray.push(line);
+                    line = [];
+                }
+                console.log('+++++++++++++');
+                console.log(dataArray);
+                console.log('+++++++++++++');
+                return dataArray;
+            }
+
+            function gridspace(totalwidth) {
+                if (arguments.length < 1) throw console.warn('where are contents？');
+                let contentargs = [].slice.call(arguments, 1);
+                console.log(contentargs);
+                let limitNum = [];
+                contentargs.forEach(value => {
+                    for (let k = 0; k < value.size.h; k++) {
+                        for (let i = 0; i < value.size.w; i++) {
+                            limitNum.push((value.position.x - 1 + k) * totalwidth + value.position.y + i)
+                        }
+                    }
+                })
+                limitNum.sort(function(a, b) {
+                    return a - b;
+                })
+                console.log(limitNum);
+                return limitNum;
+            }
+
+            function findIndex(lin, col, cont, data) {
+                let pathArr = [];
+                console.log(cont);
+                [].forEach.call(cont, function add(e) {
+                    pathArr.push(e.path);
+                });
+                console.log('state is ' + pathArr.indexOf(data[col][lin].path))
+                return pathArr.indexOf(data[col][lin].path);
+            }
+            // Vue.component('image-grid', {
+            //     template: `<div class='wrap'>
+            //                     <div class="big-img">
+            //                         <div>
+            //                             <img v-for='(item,index) of contents_data' :src="item.path" v-show='index === state_number' alt="">
+            //                         </div>
+            //                     </div>
+            //                     <table @click.prevent='showdetail'>
+            //                         <tbody>
+            //                             <tr v-for='h of dataassign'>
+            //                                 <td v-for='data of h' :colspan='data.size.w' :rowspan='data.size.h'>
+            //                                     <div v-if='data.path !== null' class='content'>
+            //                                         <img :src='data.path' alt=''>
+            //                                     </div>
+            //                                 </td>
+            //                             </tr>
+            //                         </tbody>
+            //                     </table>
+            //                 </div>`,
+            //     data() {
+            //         return {
+            //             contents_data: jsonarray,
+            //             dataassign: tableAssign(jsonarray, gridspace(gridsize.w, ...jsonarray)),
+            //             state_number: 0
+            //         }
+            //     },
+            //     methods: {
+            //         showdetail: function(e) {
+            //             console.log(e)
+            //         }
+            //     }
+            // })
+        })()
+    </script>
+</body>
+
+</html>
