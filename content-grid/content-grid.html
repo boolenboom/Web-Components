@@ -20,7 +20,7 @@
             </div>
             <section class="mask-left" :class='{cover:!detail_show}' @transitionend.stop='switchlevel'></section>
         </div>
-        <table :class='{highlevel:grid_level}'>
+        <table :class='{highlevel:grid_level === 4 ? true : false}'>
             <tbody>
                 <tr v-for='(h,num) of dataassign'>
                     <td v-for='(data,index) of h' :colspan='data.size.w' :rowspan='data.size.h'>
@@ -84,20 +84,22 @@
                                 this.state_number = findIndex(lin, col, this.contents_data, this.dataassign);
                                 this.grid_show = false;
                                 this.is_once = true;
+                                console.log('show');
                             },
                             switchlevel: function(e) {
                                 if (!this.is_once) return;
                                 this.is_once = false;
                                 this.grid_level = this.grid_level === 4 ? 1 : 4;
-                                console.log('toggle');
+                                console.log('switch');
                             },
                             hiddendetail: function() {
-                                this.detail_show = true;
+                                this.detail_show = false;
                                 this.is_once = true;
+                                console.log('hidden');
                             }
                         },
                         watch: {
-                            level: function(newVal) {
+                            grid_level: function(newVal) {
                                 this.grid_show = newVal === 4 ? true : false;
                                 this.detail_show = newVal === 1 ? true : false;
                             }

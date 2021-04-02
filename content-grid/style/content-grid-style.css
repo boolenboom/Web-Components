@@ -30,8 +30,8 @@
   background: #e4bb5d;
   position: absolute;
   top: 0;
-  -webkit-transition: right 2s cubic-bezier(0.9, 0, 0.1, 1);
-  transition: right 2s cubic-bezier(0.9, 0, 0.1, 1);
+  -webkit-transition: right 0.8s cubic-bezier(0.9, 0, 0.1, 1);
+  transition: right 0.8s cubic-bezier(0.9, 0, 0.1, 1);
 }
 
 [class*=-left] {
@@ -85,9 +85,12 @@
 .big-img .folder {
   position: absolute;
   width: 10%;
-  margin: 0;
-  margin-right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
   font-size: 64px;
+  text-align: center;
+  padding: auto;
   z-index: 3;
 }
 
