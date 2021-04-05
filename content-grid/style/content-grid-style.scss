@@ -4,47 +4,10 @@
     list-style: none;
     text-decoration: none;
     font-size: 0;
-    // outline: 1px solid #f00;
 }
 
-.content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    cursor: pointer;
-    img {
-        transition: transform .5s ease;
-        position: absolute;
-        top: -200px;
-        left: -200px;
-    }
-}
-
-[class*=mask-] {
-    width: 100%;
-    height: 100%;
-    background: rgb(228, 187, 93);
-    position: absolute;
-    top: 0;
-    transition: right .8s cubic-bezier(0.9, 0, 0.1, 1);
-}
-
-[class*=-left] {
-    right: 100%;
-}
-
-[class*=-right] {
-    right: -100%;
-}
-
-.cover {
-    right: 0;
-}
-
-.content:hover img {
-    transform: scale(1.1);
-    // box-shadow: 0px 0px 5px 5px rgba(136, 102, 102, 0.2);
+:root {
+    --grid-width: 12.5%;
 }
 
 .wrap {
@@ -94,17 +57,17 @@ table {
     border-spacing: 0;
     td {
         position: relative;
-        width: 12.5%;
+        width: var(--grid-width);
         // background-color: #fff5ee;
         overflow: hidden;
         border-radius: 2px;
         background-color: #fff5ee;
     }
     tbody td:is([colspan='2']) {
-        width: 25%;
+        width: calc(var(--grid-width) * 2);
     }
     tbody td:is([colspan='3']) {
-        width: 37.5%;
+        width: calc(var(--grid-width) * 3);
     }
     .space {
         background-color: seashell;
@@ -116,4 +79,44 @@ table {
 
 .highlevel {
     z-index: 4;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    img {
+        transition: transform .5s ease;
+        position: absolute;
+        top: -200px;
+        left: -200px;
+    }
+}
+
+.content:hover img {
+    transform: scale(1.1);
+    // box-shadow: 0px 0px 5px 5px rgba(136, 102, 102, 0.2);
+}
+
+[class*=mask-] {
+    width: 100%;
+    height: 100%;
+    background: rgb(228, 187, 93);
+    position: absolute;
+    top: 0;
+    transition: right .8s cubic-bezier(0.9, 0, 0.1, 1);
+}
+
+[class*=-left] {
+    right: 100%;
+}
+
+[class*=-right] {
+    right: -100%;
+}
+
+.cover {
+    right: 0;
 }

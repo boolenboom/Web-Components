@@ -103,6 +103,10 @@
                                 this.grid_show = newVal === 4 ? true : false;
                                 this.detail_show = newVal === 1 ? true : false;
                             }
+                        },
+                        created: function() {
+                            let root = document.documentElement;
+                            root.style.setProperty('--grid-width', `${100 / gridsize.w}%`);
                         }
                     });
                 }
